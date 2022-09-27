@@ -12,6 +12,7 @@ def E(y, a, b, name):
         ff = np.array([a / (1 + b * (x / 100)) for x in range(101)])
     return np.dot((y-ff).T, (y-ff))
 
+# Gradient descent method
 def gradient_descent(name, y):
 
     # partial derivatives
@@ -47,6 +48,7 @@ def gradient_descent(name, y):
     return [aa, bb]
 
 
+# Numerical computation of hessian
 def hessian_num(c, x, y, func, eps=1e-6):
     a_arg, b_arg = c[0], c[1]
 
@@ -60,24 +62,29 @@ def hessian_num(c, x, y, func, eps=1e-6):
 
     return np.array([[part_deriv_aa, part_deriv_ab], [part_deriv_ab, part_deriv_bb]])
 
+# Objective function, linear approximant
 def D_ab_lin(c, x, y):
     func = c[0]*x + c[1] - y
     return np.dot(func, func)
 
+# Objective function, rational approximant
 def D_ab_nonlin(c, x, y):
     func = c[0] / (1 + c[1]*x) - y
     return np.dot(func, func)
 
+# Gradient function, linear approximant
 def gradient_lin(c, x, y):
     da = 2*np.dot(c[0]*x + c[1] - y, x)
     db = 2*(c[0] * x + c[1] - y).sum()
     return np.array([da, db])
 
+# Gradient function, rational approximant
 def gradient_nonlin(c, x, y):
     da = 2*c[0] * ((1/(c[1]*x + 1))**2).sum() - 2 * (y / (c[1] * x + 1)).sum()
     db = -2*c[0]*c[0] * (x / (c[1]*x+1)**3).sum() + 2*c[0] * (y*x / (c[1] * x + 1)**2).sum()
     return np.array([da, db])
 
+# Newton's method
 def newton(c, x, y, D_ab, gradient, hesse, func_type, eps=0.001):
     alpha = 0.01
     delta = 1
@@ -102,6 +109,7 @@ def newton(c, x, y, D_ab, gradient, hesse, func_type, eps=0.001):
           f"Function evaluations: {neval}\n")
     return c
 
+# Levenberg-Marquardt method
 def levenberg_marquardt(x, y, c0, type):
 
     def rational(c, x, y):
@@ -123,8 +131,8 @@ def levenberg_marquardt(x, y, c0, type):
 
 
 random.seed(1)
-at = random.random() # теоретическое значение параметра a
-bt = random.random() # теоретическое значение параметра b
+at = random.random()
+bt = random.random()
 
 np.random.seed(1)
 x = np.array([k / 100 for k in range(101)])
