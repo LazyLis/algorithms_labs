@@ -6,24 +6,25 @@ class PSO(object):
     def __init__(self, population_size, max_steps, args=()):
         self.args = args
         self.c1 = self.c2 = 2
-        self.population_size = population_size  # Количество роя частиц
-        self.dim = 4  # Размер области поиска
-        self.w = np.array([0.6] * self.dim)  # инерционный вес
-        self.max_steps = max_steps  # количество итераций
-        self.c_bound = [-5, 5]  # Диапазон пробелов решения
+        self.population_size = population_size  # number of particles
+        self.dim = 4
+        self.w = np.array([0.6] * self.dim)  # weights
+        self.max_steps = max_steps  # number of iterations
+        self.c_bound = [-5, 5]  # interval for search of a solution
 
         np.random.seed(1)
         self.c = np.random.uniform(self.c_bound[0], self.c_bound[1],
-                                   (self.population_size, self.dim))  # Инициализировать положение роя частиц
-        self.v = np.random.rand(self.population_size, self.dim)  # Инициализировать скорость роя частиц
+                                   (self.population_size, self.dim))  # initial position of particles
+        self.v = np.random.rand(self.population_size, self.dim)  # initial velocity of particles
 
 
         fitness = self.calculate_fitness(self.c)
-        self.p = self.c  # Лучшее положение индивида
-        self.pg = self.c[np.argmin(fitness)]  # Лучшая позиция в мире
-        self.individual_best_fitness = fitness  # Оптимум одной частицы
-        self.global_best_fitness = np.max(fitness)  # Оптимум среди всех частиц
+        self.p = self.c  # the best position of a particle
+        self.pg = self.c[np.argmin(fitness)]  # the best position among the particles
+        self.individual_best_fitness = fitness  # the best objective function for a particle
+        self.global_best_fitness = np.max(fitness)  # the best objective function among the particles
 
+    # calculating the objective function
     def calculate_fitness(self, c):
         def prepare_data(x, y, c):
             y1 = np.expand_dims(y, axis=1).T
@@ -50,6 +51,7 @@ class PSO(object):
         D_ab = ((F(x, c) - y) ** 2).sum(axis=1)
         return D_ab
 
+    # start the evolution
     def evolve(self, silence=False):
         nit, nfev = 0, 1
 
