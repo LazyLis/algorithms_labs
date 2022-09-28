@@ -58,19 +58,20 @@ class PSO(object):
         for step in range(self.max_steps):
             r1 = np.random.rand(self.population_size, self.dim)
             r2 = np.random.rand(self.population_size, self.dim)
-            # Обновить скорость и вес
+
+            # update velocity and weight
             self.v = self.w * self.v + self.c1 * r1 * (self.p - self.c) + self.c2 * r2 * (self.pg - self.c)
             self.c = self.v + self.c
             nit += 1
             nfev += 1
             fitness = self.calculate_fitness(self.c)
 
-            # Лица, нуждающиеся в обновлении
+            # update individual particle best parameters
             update_id = np.greater(self.individual_best_fitness, fitness)
             self.p[update_id] = self.c[update_id]
             self.individual_best_fitness[update_id] = fitness[update_id]
 
-            # Новое поколение имеет меньшую физическую форму, поэтому обновите глобальную оптимальную форму и положение
+            # update global parameters
             if np.min(fitness) < self.global_best_fitness:
                 self.pg = self.c[np.argmin(fitness)]
                 self.global_best_fitness = np.min(fitness)
