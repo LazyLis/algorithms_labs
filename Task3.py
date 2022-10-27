@@ -137,7 +137,7 @@ bt = random.random()
 np.random.seed(1)
 x = np.array([k / 100 for k in range(101)])
 y = np.array(at * x + bt + np.random.normal(0., 1., size=len(x)))
-method_type = 'linear'
+method_type = 'rational'
 
 print('\nConjugate  gradient:')
 if method_type == 'linear':
@@ -150,7 +150,7 @@ if method_type == 'linear':
 else:
     cg = minimize(D_ab_nonlin, np.array([0.450, 0.450]), method='CG', args=(x, y),  jac=gradient_nonlin, \
                         options={'disp': True, 'eps': 1e-3})
-    newt = newton(np.array([0.59, 0.6]), x, y, D_ab_nonlin, gradient_nonlin, hessian_num, method_type)
+    newt = newton(np.array([0.8, -0.3]), x, y, D_ab_nonlin, gradient_nonlin, hessian_num, method_type)
     lm = levenberg_marquardt(x, y, np.array([1, 1]), method_type)
     gd = gradient_descent(method_type, y)
 
